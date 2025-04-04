@@ -151,7 +151,19 @@
           background-size: 200% 100%;
           background-position: right center;
       }
-  }
+    }
+    @keyframes spin-once {
+      0%{
+        transform: rotate(0deg);
+      }
+      100%{
+        transform: rotate(-4deg);
+      }
+     
+    }
+    .animate-spin-once {
+      animation: spin-once 0.5s linear forwards;
+    }
   
   .animate-gradient-x {
       animation: gradient-x 3s ease infinite;
