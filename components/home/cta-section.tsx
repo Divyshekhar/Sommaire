@@ -15,8 +15,8 @@ export default function CTASection() {
                     </div>
                     <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center mt-[20px]">
                         <div>
-                            <Button variant={'link'} size="lg" className="w-full min-[400px] :w-auto bg-linear-to-r from-slate-900 to-teal-500 hover:from-teal-5000 hover:mask-r-to-slate-900 hover:text-white text-white transition-all duration-300 flex items-center justify-center">
-                                <Link href={"/#pricing"} className="flex items-center justify-center"><span className="px-2">Get Started</span> <ArrowRight className="ml-2 h-4 w-4 animate-pulse" /></Link>
+                            <Button variant={'link'} size="lg" className="transform hover:scale-105 hover:no-underline w-full min-[400px] :w-auto bg-linear-to-r from-slate-900 to-teal-500 hover:from-teal-500 hover:mask-r-to-slate-900 hover:text-white text-white transition duration-350 flex items-center justify-center">
+                                <Link href={"/#pricing"} className="flex items-center justify-center"><span className="px-2 ">Get Started</span> <ArrowRight className="ml-2 h-4 w-4 animate-pulse" /></Link>
                             </Button>
                         </div>
                     </div>
