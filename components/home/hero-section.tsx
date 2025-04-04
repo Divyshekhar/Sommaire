@@ -23,7 +23,7 @@ export default function Home() {
                     </span> {'  '}
                     summaries
             </h1>
-            <h2 className="text-center text-lg sm:text-xl lg:text-2xl px-4 lg:px-0 lg:max-w-4xl text-gray-600">Get a beutiful summary reel of the document in seconds.</h2>
+            <h2 className="text-center text-lg sm:text-xl lg:text-2xl px-4 lg:px-0 lg:max-w-4xl text-gray-600">Get a beautiful summary reel of the document in seconds.</h2>
             <Link href={'/#pricing'}>
                 <Button variant={'link'} className="flex gap-2 text-base items-center bg-teal-500 hover:bg-blue-600 text-white mt-6 sm:text-lg lg:text-xl rounded-full px-12 sm:px-14 lg:px-16 sm:py-7 lg:py-8 lg:mt-16 ">
                     <span className="pl-2">Try Sommaire</span>
