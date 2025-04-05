@@ -8,7 +8,7 @@ export default function Home() {
         <section className="relative mx-auto flex flex-col justify-center items-center z-0 py-16 sm:py-20 lg:pb-28 transition-all animate-in lg:px-12 max-w-7xl">
             
                 <div className="relative p-[1px] overflow-hidden rounded-full bg-linear-to-r from-teal-200 via-teal-500 to-teal-800 animate-gradient-x">
-                    <Badge variant={"outline"}
+                    <Badge variant={"secondary"}
                         className="relative px-6 py-2 text-base font-medium bg-white rounded-full group-hover:bg-blue-50 transition-colors duration-200 hover:bg-teal-200">
                         <Sparkles style={{ height: '25px', width: '25px' }} className="mr-2 text-teal-600 animate-pulse" />
                         <p className="text-base text-teal-600">Powered by AI</p>
