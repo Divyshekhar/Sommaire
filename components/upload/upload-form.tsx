@@ -74,26 +74,28 @@ const UploadForm = () => {
       toast.success("📄 Summary generated!", {
         description: "Saving your summary now...",
       });
-      console.log("This is result", result);
-      console.log("this is data", data);
-      if(data.summary){
+      try{
+        if (data.summary) {
         await storePdfSummaryAction({
           summary: data.summary,
           fileUrl: data.fileUrl,
           title: data.title,
           fileName: data.fileName,
-        })
+        }) 
       }
+      toast.success("💾 Summary Saved!", {
+        description: "Your summary is saved in your profile!"
+      })
 
-    // TODO: Save summary to database
-    // TODO: Redirect to summary page
-
-    } else {
-      toast.error("Summary generation failed", {
-        description: message ?? "Unknown error occurred.",
-      });
+      // TODO: Save summary to database
+      // TODO: Redirect to summary page
+    }
+    catch(error){
+      console.error("Error Saving Summary!", error);
+      toast.error("Failed to save summary!");
+    } 
+    }
   }
-}
 
 
   return (
