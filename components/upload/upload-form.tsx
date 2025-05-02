@@ -1,89 +1,108 @@
 "use client";
 
-import { any, z } from "zod";
+import { z } from "zod";
 import UploadFormInput from "./upload-form-input";
 import { useUploadThing } from "@/utils/uploadthing";
 import { toast } from "sonner";
-import { generatePdfSummary } from "@/actions/upload-actions";
+import { generatePdfSummary, storePdfSummaryAction } from "@/actions/upload-actions";
+import type { ourFileRouter } from '@/app/api/uploadthing/core'
+import { ClientUploadedFileData } from "uploadthing/types";
+
 
 const schema = z.object({
   file: z
     .instanceof(File, { message: "Invalid File" })
-    .refine(
-      (file) => file.size <= 20 * 1024 * 1024,
-      "File size must be less than 20MB"
-    )
-    .refine(
-      (file) => file.type.startsWith("application/pdf"),
-      "File must be a pdf"
-    ),
+    .refine((file) => file.size <= 20 * 1024 * 1024, "File must be < 20MB")
+    .refine((file) => file.type === "application/pdf", "File must be a PDF"),
 });
 
 const UploadForm = () => {
-  const { startUpload, routeConfig } = useUploadThing("pdfUploader", {
+  const { startUpload } = useUploadThing("pdfUploader", {
     onClientUploadComplete: () => {
-      toast("uploaded successfully!");
+      toast.success("Uploaded successfully!");
     },
     onUploadError: (err) => {
-      console.error("error occurred while uploading", err);
-      toast("error occurred while uploading", {
+      console.error("Upload error", err);
+      toast.error("Upload failed", {
         description: err.message,
       });
     },
-    onUploadBegin: ({ file }) => {
-      console.log("upload has begun for", file);
-    },
+    // onUploadBegin: ({ file }) => {
+    //   console.log("Uploading file:", file.name);
+    // },
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Submitted");
-    const formdata = new FormData(e.currentTarget);
-    const file = formdata.get("file") as File;
 
-    // validating the fields
-    const validatedFields = schema.safeParse({ file });
-    console.log(validatedFields);
-    if (!validatedFields.success) {
-      toast("Something went wrong", {
+    const formData = new FormData(e.currentTarget);
+    const file = formData.get("file") as File;
+
+    const validation = schema.safeParse({ file });
+    if (!validation.success) {
+      toast.error("Invalid file", {
         description:
-          validatedFields.error.flatten().fieldErrors.file?.[0] ??
-          "Invalid File",
+          validation.error.flatten().fieldErrors.file?.[0] ?? "Invalid file",
       });
       return;
     }
 
     toast("Uploading PDF...", {
-      description: "We are uploading your PDF",
+      description: "Please wait while we upload your file.",
     });
 
-    // uplpad the file to uploadthing
-    const resp = await startUpload([file]);
-    if (!resp) {
-      toast("Something went Wrong", {
-        description: "Please use a different file",
+    const uploadResponse = await startUpload([file]);
+    if (!uploadResponse) {
+      toast.error("Upload failed", {
+        description: "Please try again with a different file.",
       });
       return;
     }
 
     toast("Processing PDF...", {
-      description: "Hang tight! Our AI is reading through your document!",
+      description: "Hang tight! We are analyzing your document.",
     });
 
-    // parse the pdf using lang chain
-    
-    const summary = await generatePdfSummary(resp);
-    console.log(summary);
+    const result = await generatePdfSummary(
+      uploadResponse as ClientUploadedFileData<ourFileRouter>[]
+    );
+    console.log("this is result", result);
 
-    // summarize the pdf using AI
-    // save the summary to the database
-    // redirect to the [id] summary page
-  };
+    const { success, data, message } = result;
+
+    if (success && data) {
+      toast.success("📄 Summary generated!", {
+        description: "Saving your summary now...",
+      });
+      console.log("This is result", result);
+      console.log("this is data", data);
+      if(data.summary){
+        await storePdfSummaryAction({
+          summary: data.summary,
+          fileUrl: data.fileUrl,
+          title: data.title,
+          fileName: data.fileName,
+        })
+      }
+
+    // TODO: Save summary to database
+    // TODO: Redirect to summary page
+
+    } else {
+      toast.error("Summary generation failed", {
+        description: message ?? "Unknown error occurred.",
+      });
+  }
+}
+
+
   return (
     <div className="flex flex-col gap-8 w-full max-w-2xl mx-auto">
       <UploadFormInput onSubmit={handleSubmit} />
     </div>
   );
-};
+}
+
+
 
 export default UploadForm;
