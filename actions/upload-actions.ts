@@ -5,6 +5,7 @@ import { getDbConnection } from "@/lib/db";
 import { generateSummaryFromGemini } from "@/lib/geminiai";
 import { fetchAndExtractPdfText } from "@/lib/langchain";
 import { auth } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 import { ClientUploadedFileData } from "uploadthing/types";
 
 interface PdfSummaryType {
@@ -91,7 +92,8 @@ export async function storePdfSummaryAction({
   summary,
   title,
   fileName,
-}: Omit<PdfSummaryType, "userId">): Promise<StorePdfSummaryResponse> {
+}: Omit<PdfSummaryType, "userId">) {
+  let savedSummary: any;
   try {
     const { userId } = await auth();
 
@@ -102,7 +104,7 @@ export async function storePdfSummaryAction({
       };
     }
 
-    const savedSummary = await savePdfSummary({
+    savedSummary = await savePdfSummary({
       userId,
       fileUrl,
       summary,
@@ -117,18 +119,20 @@ export async function storePdfSummaryAction({
       };
     }
 
-    return {
-      success: true,
-      message: "Summary saved successfully.",
-      data: savedSummary,
-    };
+
   } catch (error) {
     return {
       success: false,
-      message:
-        error instanceof Error
-          ? error.message
-          : "Unexpected error occurred while saving summary.",
-    };
+      message: error instanceof Error ? error.message : "error saving PDF Summary"
+
+    }
   }
+  //reva;idate path
+  revalidatePath(`/summaries/${savedSummary.id}`)
+
+  return {
+    success: true,
+    message: "Summary saved successfully.",
+    data: {savedSummary}
+  };
 }

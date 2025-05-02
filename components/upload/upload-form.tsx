@@ -1,12 +1,14 @@
 "use client";
 
 import { z } from "zod";
-import UploadFormInput from "./upload-form-input";
+import { UploadFormInput } from "./upload-form-input";
 import { useUploadThing } from "@/utils/uploadthing";
 import { toast } from "sonner";
 import { generatePdfSummary, storePdfSummaryAction } from "@/actions/upload-actions";
 import type { ourFileRouter } from '@/app/api/uploadthing/core'
 import { ClientUploadedFileData } from "uploadthing/types";
+import { useRouter } from "next/navigation";
+import { useRef } from "react";
 
 
 const schema = z.object({
@@ -17,6 +19,8 @@ const schema = z.object({
 });
 
 const UploadForm = () => {
+  const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
   const { startUpload } = useUploadThing("pdfUploader", {
     onClientUploadComplete: () => {
       toast.success("Uploaded successfully!");
@@ -66,41 +70,38 @@ const UploadForm = () => {
     const result = await generatePdfSummary(
       uploadResponse as ClientUploadedFileData<ourFileRouter>[]
     );
-    console.log("this is result", result);
 
     const { success, data, message } = result;
 
     if (success && data) {
-      toast.success("📄 Summary generated!", {
-        description: "Saving your summary now...",
+      let storeResult: any;
+      toast.success("✨ Summary generated!", {
+        description: "Your PDF has been successfully summarized and saved",
       });
-      try{
+      try {
         if (data.summary) {
-        await storePdfSummaryAction({
-          summary: data.summary,
-          fileUrl: data.fileUrl,
-          title: data.title,
-          fileName: data.fileName,
-        }) 
+          storeResult = await storePdfSummaryAction({
+            summary: data.summary,
+            fileUrl: data.fileUrl,
+            title: data.title,
+            fileName: data.fileName,
+          })
+          formRef.current?.reset()
+          router.push(`/summaries/${storeResult.data.savedSummary.id}`)
+        }
+        // TODO: Redirect to summary page
       }
-      toast.success("💾 Summary Saved!", {
-        description: "Your summary is saved in your profile!"
-      })
-
-      // TODO: Save summary to database
-      // TODO: Redirect to summary page
-    }
-    catch(error){
-      console.error("Error Saving Summary!", error);
-      toast.error("Failed to save summary!");
-    } 
+      catch (error) {
+        console.error("Error Saving Summary!", error);
+        toast.error("Failed to save summary!");
+      }
     }
   }
 
 
   return (
     <div className="flex flex-col gap-8 w-full max-w-2xl mx-auto">
-      <UploadFormInput onSubmit={handleSubmit} />
+      <UploadFormInput ref ={formRef} onSubmit={handleSubmit} />
     </div>
   );
 }

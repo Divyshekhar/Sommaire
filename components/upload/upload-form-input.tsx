@@ -1,4 +1,5 @@
 "use client"
+import { forwardRef } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
@@ -6,15 +7,18 @@ interface UploadFormInputProps {
     onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
-export default function UploadFormInput({ onSubmit }: UploadFormInputProps) {
-    return (
-        <form className="flex flex-col gap-6" onSubmit={onSubmit}>
-            <div className="flex justify-end items-center gap-1.5">
-                <Input id='file' name='file' type="file" accept="application/pdf" required className="" />
-                <Button variant={'link'} className="transform hover:scale-105 transition hover:no-underline flex gap-2 text-base items-center bg-teal-500 hover:bg-blue-600 text-white mt-2duration-320 ease-in-out ">
-                    <span className="pl-2">Upload your PDF</span>
-                </Button>
-            </div>
-        </form>
-    )
-}
+export const UploadFormInput = forwardRef<HTMLFormElement, UploadFormInputProps>(
+    ({ onSubmit }, ref) => {
+        return (
+            <form ref={ref} className="flex flex-col gap-6" onSubmit={onSubmit}>
+                <div className="flex justify-end items-center gap-1.5">
+                    <Input id='file' name='file' type="file" accept="application/pdf" required className="" />
+                    <Button variant={'link'} className="transform hover:scale-105 transition hover:no-underline flex gap-2 text-base items-center bg-teal-500 hover:bg-blue-600 text-white mt-2duration-320 ease-in-out ">
+                        <span className="pl-2">Upload your PDF</span>
+                    </Button>
+                </div>
+            </form>
+        )
+
+    }
+)
