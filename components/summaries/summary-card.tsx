@@ -2,14 +2,13 @@ import Link from "next/link";
 import { Card } from "../ui/card";
 import DeleteButton from "./delete-button";
 import { FileTextIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatFileName } from "@/lib/utils";
 const SummaryHeader = ({ fileUrl, title, createdAt }: { fileUrl: string, title: string, createdAt: string }) => {
-    console.log("this is createdAt", createdAt)
     return <div className="flex items-start gap-2 sm:gap-4">
         <FileTextIcon className="w-6 h-6 sm:w-8 sm:h-8 text-teal-400 mt-1" />
         <div className="flex-1 min-w-0">
             <h3 className="text-base xl:text-lg font-semibold text-gray-900 tuncate w-4/5">
-                {title}
+                {title || formatFileName(fileUrl)}
             </h3>
             <p className="text-sm text-gray-500">
                 {createdAt}
@@ -27,7 +26,7 @@ export default function SummaryCard({ summary, created_At }: { summary: any; cre
         <div>
             <Card className="relative h-full">
                 <div className="absolute top-2 right-2">
-                    <DeleteButton />
+                    <DeleteButton summaryId={summary.id}/>
                 </div>
                 <Link href={`summaries/${summary.id}`} className="block p-4 sm:p-6">
                     <div className="flex flex-col gap-3 sm:gap-4">

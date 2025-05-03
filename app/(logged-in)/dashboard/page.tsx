@@ -7,6 +7,7 @@ import { ArrowRight, Plus } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { formatDistanceToNow } from 'date-fns'
+import EmptySummaryState from "@/components/summaries/empty-summary-state";
 
 export default async function DashboardPage() {
     const user = await currentUser();
@@ -17,7 +18,7 @@ export default async function DashboardPage() {
     const response = await getSummaries(userId);
     const summaries = response.map((summary) => ({
         ...summary,
-        created_at: formatDistanceToNow(new Date(summary.created_at), {addSuffix: true})
+        created_at: formatDistanceToNow(new Date(summary.created_at), { addSuffix: true })
     }))
     const valueUploadLimit = 5
     return (
@@ -36,20 +37,25 @@ export default async function DashboardPage() {
                     </div>
                     <div className="mb-6">
                         <div className="bg-teal-100 border border-teal-200 rounded-lg p-4 text-teal-800">
-                            <p className="text-sm">You've reached the limit of {valueUploadLimit} uploads on the Basic plan.</p>
-                            <Link href="/#pricing"
-                                className="text-teal-800 underline font-medium underline-offset-4 inline-flex items-center"
-                            >
-                                Click here to upgrade to Pro {'  '}
-                            </Link>
-                            <ArrowRight className="w-4 h-4 inline-block" />for unlimited uploads.
+                            <p className="text-sm">You've reached the limit of {valueUploadLimit} uploads on the Basic plan.
+                                <Link href="/#pricing"
+                                    className="text-teal-800 underline font-medium underline-offset-4 inline-flex items-center"
+                                >
+                                    Click here to upgrade to Pro {'  '}
+                                </Link>
+                                <ArrowRight className="w-4 h-4 inline-block" />for unlimited uploads.
+                            </p>
                         </div>
                     </div>
-                    <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 sm:px-0">
-                        {summaries.map((summary, index) => (
-                            <SummaryCard key={index} summary={summary} created_At={summaries[index].created_at} />
-                        ))}
-                    </div>
+
+                    {summaries.length === 0 ? <EmptySummaryState /> : (
+                        <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 sm:px-0">
+                            {summaries.map((summary, index) => (
+                                <SummaryCard key={index} summary={summary} created_At={summaries[index].created_at} />
+                            ))}
+                        </div>
+                    )}
+
                 </div>
             </div>
         </main>
