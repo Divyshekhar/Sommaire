@@ -6,6 +6,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { ArrowRight, Plus } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { formatDistanceToNow } from 'date-fns'
 
 export default async function DashboardPage() {
     const user = await currentUser();
@@ -15,15 +16,15 @@ export default async function DashboardPage() {
     }
     const response = await getSummaries(userId);
     const summaries = response.map((summary) => ({
-        ...summary, 
-        created_at: new Date(summary.created_at).toLocaleDateString()
+        ...summary,
+        created_at: formatDistanceToNow(new Date(summary.created_at), {addSuffix: true})
     }))
     const valueUploadLimit = 5
     return (
         <main className="min-h-screen min-w-screen ">
             <BgComponent />
             <div className="container max-auto flex flex-col gap-4 ml-2 ">
-                <div className="pt-12 sm:py-24 min-w-[calc(100vw-1vw)]">
+                <div className="pl-20 pr-20 pt-12 sm:py-24 min-w-[calc(100vw-2vw)]">
                     <div className="flex gap-4 mb-8 justify-between">
                         <div className="flex flex-col gap-2">
                             <h1 className="text-4xl font-bold tracking-tight bg-linear-to-r from-gray-600 to-gray-900 bg-clip-text text-transparent">Your Summaries</h1>
@@ -46,7 +47,7 @@ export default async function DashboardPage() {
                     </div>
                     <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 sm:px-0">
                         {summaries.map((summary, index) => (
-                            <SummaryCard key={index} summary={summary} created_At={summaries[index].created_at}/>
+                            <SummaryCard key={index} summary={summary} created_At={summaries[index].created_at} />
                         ))}
                     </div>
                 </div>
