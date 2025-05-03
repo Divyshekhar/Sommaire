@@ -23,7 +23,7 @@ export async function getSummaryById(id: string) {
         return summary
 
     } catch (error) {
-        console.log("Could not get summary", error);
+        console.error("Could not get summary", error);
         return {
             success: false
         }

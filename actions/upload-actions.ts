@@ -39,10 +39,8 @@ export async function generatePdfSummary(
 
   try {
     const pdfText = await fetchAndExtractPdfText(pdfUrl);
-    console.log("PDF text extracted:", pdfText);
 
     const summary = await generateSummaryFromGemini(pdfText);
-    console.log("Summary generated:", summary);
 
     return {
       success: true,

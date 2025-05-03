@@ -31,9 +31,6 @@ const UploadForm = () => {
         description: err.message,
       });
     },
-    // onUploadBegin: ({ file }) => {
-    //   console.log("Uploading file:", file.name);
-    // },
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -67,9 +64,7 @@ const UploadForm = () => {
       description: "Hang tight! We are analyzing your document.",
     });
 
-    const result = await generatePdfSummary(
-      uploadResponse as ClientUploadedFileData<ourFileRouter>[]
-    );
+    const result = await generatePdfSummary(uploadResponse as ClientUploadedFileData<ourFileRouter>[]);
 
     const { success, data, message } = result;
 

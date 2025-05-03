@@ -13,7 +13,6 @@ export async function deleteSummaryAction({summaryId}: {summaryId: string}){
         }
         const sql = await getDbConnection();
         const result = await sql `DELETE FROM pdf_summaries WHERE id=${summaryId} AND user_id=${userId} RETURNING id`
-        console.log(result)
         if(result.length > 0){
             revalidatePath('/dashboard'); //clear cache at dashboard
             return{

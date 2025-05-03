@@ -11,7 +11,6 @@ export default async function SummaryPage(props: {
     const params = await props.params;
     const id = params.id;
     const summary = await getSummaryById(id);
-    console.log("this is sumary", summary)
     if (!summary) {
         //    <NotFoundPage />
     }
