@@ -21,12 +21,13 @@ const StatusBadge = ({ status }: { status: string }) => {
     return <span className={cn('px-3 py-1 text-xs font-medium rounded-full capitalize', status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800')}>{status}</span>
 }
 
+
 export default function SummaryCard({ summary, created_At }: { summary: any; created_At: string }) {
     return (
         <div>
             <Card className="relative h-full">
                 <div className="absolute top-2 right-2">
-                    <DeleteButton summaryId={summary.id}/>
+                    <DeleteButton summaryId={summary.id} />
                 </div>
                 <Link href={`summaries/${summary.id}`} className="block p-4 sm:p-6">
                     <div className="flex flex-col gap-3 sm:gap-4">
