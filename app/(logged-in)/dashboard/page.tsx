@@ -1,20 +1,23 @@
 import BgComponent from "@/components/common/bg-gradient";
 import SummaryCard from "@/components/summaries/summary-card";
 import { Button } from "@/components/ui/button";
+import { getSummaries } from "@/lib/summary";
+import { currentUser } from "@clerk/nextjs/server";
 import { ArrowRight, Plus } from "lucide-react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-export default function DashboardPage() {
-    const summaries = [
-        {
-            id: 1,
-            title: "sous sould",
-            description: "description",
-            createdAt: "2025-05-03 15:08:19.157033+00",
-            summary_text: "Summarized text",
-            status: "completed"
-        }
-    ]
+export default async function DashboardPage() {
+    const user = await currentUser();
+    const userId = user?.id
+    if (!userId) {
+        return redirect('/signin')
+    }
+    const response = await getSummaries(userId);
+    const summaries = response.map((summary) => ({
+        ...summary, 
+        created_at: new Date(summary.created_at).toLocaleDateString()
+    }))
     const valueUploadLimit = 5
     return (
         <main className="min-h-screen min-w-screen ">
@@ -43,7 +46,7 @@ export default function DashboardPage() {
                     </div>
                     <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3 sm:px-0">
                         {summaries.map((summary, index) => (
-                            <SummaryCard key={index} summary={summary} />
+                            <SummaryCard key={index} summary={summary} created_At={summaries[index].created_at}/>
                         ))}
                     </div>
                 </div>
