@@ -8,7 +8,7 @@ import { generatePdfSummary, storePdfSummaryAction } from "@/actions/upload-acti
 import type { ourFileRouter } from '@/app/api/uploadthing/core'
 import { ClientUploadedFileData } from "uploadthing/types";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 
 const schema = z.object({
@@ -19,6 +19,7 @@ const schema = z.object({
 });
 
 const UploadForm = () => {
+  const [loading, setLoading] = useState<boolean>(false);
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
   const { startUpload } = useUploadThing("pdfUploader", {
@@ -35,6 +36,7 @@ const UploadForm = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading((prev: boolean) => !prev)
 
     const formData = new FormData(e.currentTarget);
     const file = formData.get("file") as File;
@@ -81,6 +83,7 @@ const UploadForm = () => {
             title: data.title,
             fileName: data.fileName,
           })
+          setLoading((prev: boolean) => !prev)
           formRef.current?.reset()
           router.push(`/summaries/${storeResult.data.savedSummary.id}`)
         }
@@ -96,7 +99,7 @@ const UploadForm = () => {
 
   return (
     <div className="flex flex-col gap-8 w-full max-w-2xl mx-auto">
-      <UploadFormInput ref ={formRef} onSubmit={handleSubmit} />
+      <UploadFormInput ref={formRef} onSubmit={handleSubmit} isLoading={loading} />
     </div>
   );
 }
