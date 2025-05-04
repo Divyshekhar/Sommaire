@@ -1,8 +1,6 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { UploadThingError } from "uploadthing/server";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
-import { ClientUploadedFileData } from "uploadthing/types";
-
 const f = createUploadthing();
 
 export const ourFileRouter = {
@@ -15,7 +13,7 @@ export const ourFileRouter = {
 
       return { userId: user.id };
     })
-    .onUploadComplete(async ({ metadata, file }: {metadata: any; file: any}) => {
+    .onUploadComplete(async ({ metadata, file }: {metadata: any; file: any}) => { 
       return { userId: metadata.userId, file };
     }),
 } satisfies FileRouter;
