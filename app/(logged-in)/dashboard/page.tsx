@@ -37,14 +37,7 @@ export default async function DashboardPage() {
                     </div>
                     <div className="mb-6">
                         <div className="bg-teal-100 border border-teal-200 rounded-lg p-4 text-teal-800">
-                            <p className="text-sm">You`&apos;`ve reached the limit of {valueUploadLimit} uploads on the Basic plan.
-                                <Link href="/#pricing"
-                                    className="text-teal-800 underline font-medium underline-offset-4 inline-flex items-center"
-                                >
-                                    Click here to upgrade to Pro {'  '}
-                                </Link>
-                                <ArrowRight className="w-4 h-4 inline-block" />for unlimited uploads.
-                            </p>
+                        
                         </div>
                     </div>
 
