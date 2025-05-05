@@ -17,13 +17,13 @@ const steps: Step[] = [
     {
         icon: <BrainCircuit size={64} strokeWidth={1.5} />,
         label: 'AI Analysis',
-        description: "Our advanced AI processes and analyzes your documentn instantly",
+        description: "Our advanced AI processes and analyzes your document instantly",
 
     },
     {
         icon: <FileOutput size={64} strokeWidth={1.5} />,
         label: "Get Summary",
-        description: "Recoeve a clear, concise summary of your document"
+        description: "Recover a clear, concise summary of your document"
     }
 
 ]
