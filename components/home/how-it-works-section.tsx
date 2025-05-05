@@ -30,7 +30,7 @@ const steps: Step[] = [
 
 export default function HowItWorksSection() {
     return (
-        <section className="relative overflow-hidden bg-gray-50">
+        <section className="relative overflow-hidden bg-gray-50"id="how-it-works">
             <div className="py-12 lg:py-24 mx-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div
                     aria-hidden="true"

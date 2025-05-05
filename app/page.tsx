@@ -10,9 +10,9 @@ export default function Home() {
       <BgComponent />  
       <div className='flex flex-col'>
       <HeroSection />
-      <DemoSection />
+      {/* <DemoSection /> */}
       <HowItWorksSection />
-      <PricingSection />
+      {/* <PricingSection /> */}
       <CTASection />
       </div>
 
